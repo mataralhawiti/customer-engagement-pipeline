@@ -1,0 +1,11 @@
+# Apache Beam and dependencies
+apache-beam[gcp]==2.66.0
+
+# Redis client (compatible with Beam requirements: >=5.0.0,<6)
+redis>=5.0.0,<6
+
+# BigQuery client (included in apache-beam[gcp] but explicitly listed for clarity)
+google-cloud-bigquery>=3.0.0
+
+# HTTP client for third-party API integration
+requests>=2.31.0

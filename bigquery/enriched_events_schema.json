@@ -1,0 +1,74 @@
+[
+  {
+    "name": "id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Unique identifier for the engagement event"
+  },
+  {
+    "name": "content_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "UUID of the content being engaged with"
+  },
+  {
+    "name": "user_id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "UUID of the user performing the engagement"
+  },
+  {
+    "name": "event_type",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Type of engagement event (play, pause, finish, etc.)"
+  },
+  {
+    "name": "event_ts",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Timestamp when the engagement event occurred (ISO 8601 format)"
+  },
+  {
+    "name": "duration_ms",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "Duration of engagement in milliseconds (null for events like 'finish')"
+  },
+  {
+    "name": "device",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Device type used for engagement (web-firefox, android, ios, etc.)"
+  },
+  {
+    "name": "raw_payload",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Raw JSON payload containing additional event metadata (session_id, user_agent, etc.)"
+  },
+  {
+    "name": "content_type",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Type of content (podcast, newsletter, video, etc.) - enriched from content metadata"
+  },
+  {
+    "name": "length_seconds",
+    "type": "INTEGER",
+    "mode": "NULLABLE",
+    "description": "Total length of content in seconds - enriched from content metadata"
+  },
+  {
+    "name": "engagement_seconds",
+    "type": "FLOAT",
+    "mode": "NULLABLE",
+    "description": "Derived field: duration_ms converted to seconds (duration_ms / 1000)"
+  },
+  {
+    "name": "engagement_pct",
+    "type": "FLOAT",
+    "mode": "NULLABLE",
+    "description": "Derived field: percentage of content consumed (engagement_seconds / length_seconds * 100)"
+  }
+]

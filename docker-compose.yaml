@@ -1,0 +1,130 @@
+services:
+  postgres:
+    image: postgres:13.22-trixie
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
+    command: >
+      postgres -c wal_level=${POSTGRES_WAL_LEVEL}
+               -c max_wal_senders=${POSTGRES_MAX_WAL_SENDERS}
+               -c max_replication_slots=${POSTGRES_MAX_REPLICATION_SLOTS}
+               -c max_connections=${POSTGRES_MAX_CONNECTIONS}
+    networks:
+      - beam-nw
+
+  pubsub-emulator:
+    image: google/cloud-sdk:emulators
+    container_name: pubsub-emulator
+    command: >
+      gcloud beta emulators pubsub start --project=${PUBSUB_PROJECT_ID} --host-port=${PUBSUB_HOST}:${PUBSUB_PORT} --data-dir=/pubsub-data
+    ports:
+      - "${PUBSUB_PORT}:8085"
+    volumes:
+      - pubsub_data:/pubsub-data
+    networks:
+      - beam-nw
+
+  pubsub-init:
+    build:
+      context: setup_pubsub
+      dockerfile: Dockerfile
+    container_name: pubsub-init
+    depends_on:
+      - pubsub-emulator
+    environment:
+      - PUBSUB_EMULATOR_HOST=pubsub-emulator:${PUBSUB_PORT}
+    networks:
+      - beam-nw
+    restart: "no"
+
+  debezium-server:
+    image: debezium/server:2.7.3.Final
+    container_name: debezium-server
+    depends_on:
+      postgres:
+        condition: service_started
+      pubsub-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./conf:/debezium/conf
+      - debezium_data:/debezium/data
+    environment:
+      DEBEZIUM_LOGGING: ${DEBEZIUM_LOGGING}
+    networks:
+      - beam-nw
+  
+  redis:
+    image: redis:8.2.1-bookworm
+    container_name: redis
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis-data:/data
+    restart: always
+    networks:
+      - beam-nw
+
+  third-party-api:
+    build:
+      context: third-party-api
+      dockerfile: Dockerfile
+    container_name: third-party-api
+    ports:
+      - "${THIRD_PARTY_API_PORT}:8080"
+    networks:
+      - beam-nw
+    restart: unless-stopped
+
+  beam-pipeline:
+    build:
+      context: .
+      dockerfile: pipeline/Dockerfile
+    container_name: beam-pipeline
+    depends_on:
+      postgres:
+        condition: service_started
+      redis:
+        condition: service_started
+      third-party-api:
+        condition: service_started
+      pubsub-init:
+        condition: service_completed_successfully
+    environment:
+      - PUBSUB_EMULATOR_HOST=pubsub-emulator:${PUBSUB_PORT}
+      - DB_HOST=postgres
+      - DB_PORT=${POSTGRES_PORT}
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      # Third-party API configuration
+      - THIRD_PARTY_API_URL=${THIRD_PARTY_API_URL}
+      # BigQuery configuration
+      - BIGQUERY_PROJECT=${BIGQUERY_PROJECT}
+      - BIGQUERY_DATASET=${BIGQUERY_DATASET}
+      - BIGQUERY_TABLE=${BIGQUERY_TABLE}
+      - GOOGLE_CLOUD_PROJECT=${BIGQUERY_PROJECT}
+    volumes:
+      # Mount local gcloud credentials for BigQuery access
+      - ~/.config/gcloud:/root/.config/gcloud:ro
+    networks:
+      - beam-nw
+    restart: unless-stopped
+
+volumes:
+  debezium_data:
+  pubsub_data:
+  postgres_data:
+  redis-data:
+
+networks:
+  beam-nw:
+    driver: bridge
