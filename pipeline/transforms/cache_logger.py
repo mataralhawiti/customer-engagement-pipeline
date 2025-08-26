@@ -12,7 +12,8 @@ class CacheSizeLogger(beam.DoFn):
     Keeps a single global counter in per-key state and logs immediately.
     Input elements should all share the same key, e.g. ('__cache__', 1)
     """
-    count_state = ReadModifyWriteStateSpec('cache_count', VarIntCoder())
+
+    count_state = ReadModifyWriteStateSpec("cache_count", VarIntCoder())
 
     def process(self, kv, count_state=beam.DoFn.StateParam(count_state)):
         key, inc = kv  # key is constant '__cache__', inc is 1

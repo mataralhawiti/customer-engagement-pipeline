@@ -59,7 +59,7 @@ services:
       DEBEZIUM_LOGGING: ${DEBEZIUM_LOGGING}
     networks:
       - beam-nw
-  
+
   redis:
     image: redis:8.2.1-bookworm
     container_name: redis

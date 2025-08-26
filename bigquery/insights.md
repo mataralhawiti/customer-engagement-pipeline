@@ -1,7 +1,7 @@
 # Basic Queries
 ### **Engagement by Content Type:**
 ```sql
-SELECT 
+SELECT
   content_type,
   COUNT(*) as total_events,
   AVG(engagement_pct) as avg_engagement_pct,
@@ -15,7 +15,7 @@ ORDER BY avg_engagement_pct DESC;
 
 ### **User Engagement Patterns:**
 ```sql
-SELECT 
+SELECT
   user_id,
   COUNT(*) as total_events,
   COUNT(DISTINCT content_id) as unique_content,
@@ -31,7 +31,7 @@ LIMIT 100;
 
 ### **Content Performance:**
 ```sql
-SELECT 
+SELECT
   content_id,
   content_type,
   length_seconds,

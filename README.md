@@ -260,7 +260,7 @@ The pipeline enriches engagement events with content metadata and derived fields
 {
   "id": 123,
   "content_id": "550e8400-e29b-41d4-a716-446655440000",
-  "user_id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8", 
+  "user_id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
   "event_type": "play",
   "event_ts": "2024-01-15T10:30:00Z",
   "duration_ms": 45000,
@@ -275,7 +275,7 @@ The pipeline enriches engagement events with content metadata and derived fields
   "id": 123,
   "content_id": "550e8400-e29b-41d4-a716-446655440000",
   "user_id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
-  "event_type": "play", 
+  "event_type": "play",
   "event_ts": "2024-01-15T10:30:00Z",
   "duration_ms": 45000,
   "device": "web-firefox",
@@ -370,7 +370,7 @@ bq query --use_legacy_sql=false \
 
 # View recent enriched events
 bq query --use_legacy_sql=false \
-  "SELECT * FROM \`${BIGQUERY_PROJECT}.${BIGQUERY_DATASET}.${BIGQUERY_TABLE}\` 
+  "SELECT * FROM \`${BIGQUERY_PROJECT}.${BIGQUERY_DATASET}.${BIGQUERY_TABLE}\`
    ORDER BY event_ts DESC LIMIT 10"
 ```
 
@@ -436,7 +436,7 @@ The pipeline includes a FastAPI-based simulation service that demonstrates how t
 
 The pipeline tracks:
 - **Enrichment success/failure rates**
-- **Cache hit/miss ratios** 
+- **Cache hit/miss ratios**
 - **Redis write performance**
 - **Content cache size**
 - **BigQuery streaming insert success/failures**

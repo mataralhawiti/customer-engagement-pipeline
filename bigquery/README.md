@@ -14,7 +14,7 @@ The enriched events table contains:
 
 ### **Original Event Fields:**
 - `id` - Event identifier (INTEGER, required)
-- `content_id` - Content UUID (STRING, required) 
+- `content_id` - Content UUID (STRING, required)
 - `user_id` - User UUID (STRING, required)
 - `event_type` - Event type (STRING, required)
 - `event_ts` - Event timestamp (TIMESTAMP, required)

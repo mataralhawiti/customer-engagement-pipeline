@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS content (
     length_seconds  INTEGER,
     publish_ts      TIMESTAMPTZ NOT NULL
 );
- 
+
 -- Raw engagement telemetry
 CREATE TABLE IF NOT EXISTS engagement_events (
     id           BIGSERIAL PRIMARY KEY,

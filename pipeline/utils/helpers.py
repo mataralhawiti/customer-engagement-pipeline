@@ -51,12 +51,14 @@ def load_bigquery_schema() -> Dict[str, Any]:
     """Load BigQuery schema from JSON file and format for WriteToBigQuery"""
     # Get path relative to this file
     current_dir = os.path.dirname(__file__)
-    schema_path = os.path.join(current_dir, '..', '..', 'bigquery', 'enriched_events_schema.json')
-    
+    schema_path = os.path.join(
+        current_dir, "..", "..", "bigquery", "enriched_events_schema.json"
+    )
+
     try:
-        with open(schema_path, 'r') as f:
+        with open(schema_path, "r") as f:
             schema_fields = json.load(f)
-        return {'fields': schema_fields}
+        return {"fields": schema_fields}
     except FileNotFoundError:
         log.error(f"BigQuery schema file not found at: {schema_path}")
         raise

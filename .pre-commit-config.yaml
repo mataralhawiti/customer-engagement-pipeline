@@ -1,0 +1,36 @@
+# Pre-commit hooks configuration
+# See https://pre-commit.com for more information
+repos:
+  # General code formatting and linting
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Ruff linter and formatter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.3
+    hooks:
+      # Run the linter
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      # Run the formatter
+      - id: ruff-format
+
+
+  # https://github.com/pre-commit/pre-commit/issues/1834
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: "v4.2.0"
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]

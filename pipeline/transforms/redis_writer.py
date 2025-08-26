@@ -5,14 +5,14 @@ import logging
 
 class WriteToRedisDoFn(beam.DoFn):
     """DoFn for writing key-value pairs to Redis with TTL support"""
-    
+
     def __init__(self, host: str, port: int, password: str = None, ttl: int = None):
         self._host = host
         self._port = port
         self._password = password
         self._ttl = ttl
         self._redis_client = None
-        
+
         # Initialize metrics and logger
         self._ok = beam.metrics.Metrics.counter("redis", "writes_ok")
         self._err = beam.metrics.Metrics.counter("redis", "writes_error")
@@ -21,8 +21,12 @@ class WriteToRedisDoFn(beam.DoFn):
     def setup(self):
         """Initializes the Redis client once per worker/process."""
         import redis
+
         self._redis_client = redis.Redis(
-            host=self._host, port=self._port, password=self._password, decode_responses=True
+            host=self._host,
+            port=self._port,
+            password=self._password,
+            decode_responses=True,
         )
 
     def process(self, element):
@@ -37,7 +41,7 @@ class WriteToRedisDoFn(beam.DoFn):
         except Exception as e:
             self._err.inc()
             self._log.error("Redis write failed for key=%s: %s", k, e)
-        
+
         # Yield nothing to satisfy Beam's iterator requirement
         return
 
