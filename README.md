@@ -22,22 +22,21 @@ The pipeline is meant to run locally utilizing Docker and Python. However, an al
   - [Real-time Event Enrichment](#real-time-event-enrichment)
   - [Stateful Processing](#stateful-processing)
   - [Windowing Strategy](#windowing-strategy)
-  - [Multiple Output Destinations](#multiple-output-destinations)
+  - [Multiple Output Destinations (Multi-sink fan-out)](#multiple-output-destinations-multi-sink-fan-out)
+- [Data Generation Options](#data-generation-options)
 - [Monitoring & Debugging](#monitoring--debugging)
   - [View Pipeline Logs](#view-pipeline-logs)
   - [Redis Inspection](#redis-inspection)
   - [Database Inspection](#database-inspection)
   - [BigQuery Inspection](#bigquery-inspection)
   - [Third-Party API Testing](#third-party-api-testing)
-- [Development](#development)
-  - [Data Generation Options](#data-generation-options)
 - [Troubleshooting](#troubleshooting)
   - [Common Issues](#common-issues)
   - [Reset Everything](#reset-everything)
+- [Third-Party API Integration](#third-party-api-integration)
 - [Performance](#performance)
   - [Metrics](#metrics)
   - [Scaling Considerations](#scaling-considerations)
-- [Third-Party API Integration](#third-party-api-integration)
 - [Google Cloud Architecture](#google-cloud-architecture)
 
 ## Architecture
@@ -300,13 +299,28 @@ The pipeline enriches engagement events with content metadata and derived fields
 - **3-second emission intervals** for batch output (configurable)
 - **Discarding accumulation** for real-time processing
 
-### Multiple Output Destinations
+### Multiple Output Destinations (Multi-sink fan-out )
 
 - **Redis**: High-speed key-value storage with TTL for real-time access
 - **BigQuery**: Data warehouse for analytics with streaming inserts
 - **Third-Party API**: HTTP integration for external systems via FastAPI
 
-## 🔍 Monitoring & Debugging
+
+## Data Generation Options
+
+```bash
+# Generate content and engagement events
+python3 data_generator.py --content 5 --engagement 50
+
+# Generate engagement for existing content only
+python3 data_generator.py --engagement 100 --use-existing
+
+# Continuous generation
+python3 data_generator.py --content 10 --engagement 50 --duration 300
+```
+
+
+## Monitoring & Debugging
 
 ### View Pipeline Logs
 ```bash
@@ -374,20 +388,6 @@ curl -X POST http://localhost:${THIRD_PARTY_API_PORT}/events \
   -d '{"events": [{"id": 1, "content_id": "test", "event_type": "play"}]}'
 ```
 
-## Development
-
-### Data Generation Options
-
-```bash
-# Generate content and engagement events
-python3 data_generator.py --content 5 --engagement 50
-
-# Generate engagement for existing content only
-python3 data_generator.py --engagement 100 --use-existing
-
-# Continuous generation
-python3 data_generator.py --content 10 --engagement 50 --duration 300
-```
 
 ## Troubleshooting
 
@@ -419,7 +419,18 @@ docker compose down -v
 docker compose up --build
 ```
 
-## 📊 Performance
+
+## Third-Party API Integration
+
+The pipeline includes a FastAPI-based simulation service that demonstrates how to integrate with external systems. The service:
+
+- **Receives enriched events** via HTTP POST
+- **Logs all interactions** for debugging and monitoring
+- **Provides health checks** and basic statistics
+- **Supports batch processing** for efficient data transfer
+
+
+## Performance
 
 ### Metrics
 
@@ -441,18 +452,6 @@ The pipeline tracks:
 - **Third-party API rate limiting**: Implement backoff and retry logic
 
 
-
-
-
-
-## Third-Party API Integration
-
-The pipeline includes a FastAPI-based simulation service that demonstrates how to integrate with external systems. The service:
-
-- **Receives enriched events** via HTTP POST
-- **Logs all interactions** for debugging and monitoring
-- **Provides health checks** and basic statistics
-- **Supports batch processing** for efficient data transfer
 
 ## Google Cloud Architecture
 
