@@ -1,6 +1,7 @@
 # Customer Engagement Pipeline
 
 A real-time Change Data Capture (CDC) streaming pipeline that enriches engagement events with content metadata using PostgreSQL, Debezium Server, Google Cloud Pub/Sub Emulator, Apache Beam, BigQuery, and third-party API integration.
+The pipeline is meant to run locally utlziing Docker and Python. However, an alternative on how the same pipeline can be implemented fully on Google Cloud is provided for reference, please see [Google Cloud Architecture](#google-cloud-architecture).
 
 ## Table of Contents
 
