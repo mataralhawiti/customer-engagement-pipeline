@@ -63,6 +63,36 @@ The pipeline is meant to run locally utlziing Docker and Python. However, an alt
 
 - Docker & Docker Compose
 - Python 3.11+ (for local data generation)
+- **Google Cloud Project with BigQuery enabled** (for full pipeline functionality)
+  - The pipeline writes enriched events to BigQuery for analytics
+  - BigQuery table must be created beforehand (see [BigQuery Integration](#bigquery-integration))
+  - Update BigQuery project (BIGQUERY_PROJECT) variables in `.env` file
+  - **Google Cloud CLI (gcloud) authentication required**
+
+    #### Google Cloud Setup Instructions:
+
+    ```bash
+    # 1. Install Google Cloud CLI
+    # macOS:
+    brew install google-cloud-sdk
+
+    # Ubuntu/Debian:
+    sudo apt-get install google-cloud-cli
+
+    # 2. Authenticate with Google Cloud
+    gcloud auth login
+
+    # 3. Set your default project
+    gcloud config set project YOUR_PROJECT_ID
+
+    # 4. Enable Application Default Credentials for local development
+    gcloud auth application-default login
+
+    # 5. Verify authentication
+    gcloud auth list
+    ```
+
+> **💡 Note:** If you prefer to run the pipeline without BigQuery integration, you can comment out the BigQuery writer section in the pipeline code. See the [BigQuery Integration](#bigquery-integration) section for details on disabling this component.
 
 ### 1. Setup Environment and Start Infrastructure
 
@@ -384,7 +414,7 @@ Automatically created by the init container:
 | `pgcdc.public.engagement_events` | `cdc-engagement_events-sub` | User engagement events |
 
 
-## 🎯 BigQuery Integration
+## BigQuery Integration
 
 The pipeline includes full BigQuery integration for analytics and long-term storage. See [`bigquery/README.md`](./bigquery/README.md) for detailed setup instructions, schema information, and sample queries.
 
@@ -394,7 +424,29 @@ The pipeline includes full BigQuery integration for analytics and long-term stor
 - **Clustered columns** for query performance
 - **Schema validation** using JSON schema definitions
 
-## 🔌 Third-Party API Integration
+### Disabling BigQuery Integration:
+
+If you want to run the pipeline without BigQuery, you can disable it by commenting out the BigQuery writer in the pipeline code:
+
+1. **Open** `pipeline/streaming_new.py`
+2. **Find** the BigQuery writer section (search for `WriteToBigQuery` or similar)
+3. **Comment out** the BigQuery write transform:
+   ```python
+       _ = (
+        emitted
+        | "WriteToBigQuery" >> beam.io.WriteToBigQuery(
+            table=table_spec,
+            schema=table_schema,
+            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+            write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
+            method=beam.io.WriteToBigQuery.Method.STREAMING_INSERTS,
+            insert_retry_strategy=beam.io.gcp.bigquery_tools.RetryStrategy.RETRY_ON_TRANSIENT_ERROR,
+        )
+    )
+   ```
+
+
+## Third-Party API Integration
 
 The pipeline includes a FastAPI-based simulation service that demonstrates how to integrate with external systems. The service:
 
