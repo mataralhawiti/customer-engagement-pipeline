@@ -8,7 +8,7 @@ This folder contains BigQuery schema definitions and setup scripts for the enric
 - **`create_table.sql`** - SQL script for manual table creation with partitioning and clustering
 - **`README.md`** - This documentation
 
-## 🎯 Schema Overview
+## Schema Overview
 
 The enriched events table contains:
 
@@ -32,7 +32,7 @@ The enriched events table contains:
 
 ## Table Creation Instructions
 
-### Using BigQuery Console**
+### **Using BigQuery Console**
 1. Open [BigQuery Console](https://console.cloud.google.com/bigquery)
 2. Create dataset: `engagement_analytics`
 3. Copy/paste the SQL from `create_table.sql`
