@@ -7,14 +7,6 @@ A real-time Change Data Capture (CDC) streaming pipeline that enriches engagemen
 ![CDC Pipeline Architecture](./architecture.png)
 
 
-
-**Data Flow:**
-```
-PostgreSQL (CDC) → Debezium Server → Pub/Sub → Apache Beam → Redis + BigQuery + Third-Party API
-    ↓                                                             ↑
-Data Generator                                              Enriched Events
-```
-
 ### Components
 
 - **PostgreSQL**: Source database with logical replication enabled
@@ -127,39 +119,8 @@ customer-engagement-pipeline/
 
 ### Environment Variables (environment.env)
 
-Copy `environment.env` to `.env` and customize as needed:
+Copy `environment.env` to `.env` and customize as needed
 
-```bash
-# PostgreSQL Configuration
-POSTGRES_USER=debezium
-POSTGRES_PASSWORD=dbz
-POSTGRES_DB=users_data
-POSTGRES_PORT=5432
-
-# Pub/Sub Emulator Configuration
-PUBSUB_PROJECT_ID=streaming-project
-PUBSUB_HOST=0.0.0.0
-PUBSUB_PORT=8085
-
-# Debezium Configuration
-DEBEZIUM_LOGGING=INFO
-
-# Pipeline Configuration
-DEFAULT_EMIT_INTERVAL_SECS=3
-
-# BigQuery Configuration
-BIGQUERY_PROJECT=dev-data-infra
-BIGQUERY_DATASET=engagement_analytics
-BIGQUERY_TABLE=enriched_events
-
-# Redis Configuration
-REDIS_HOST=redis
-REDIS_PORT=6379
-
-# Third-party API Configuration
-THIRD_PARTY_API_URL=http://third-party-api:8080
-THIRD_PARTY_API_PORT=8080
-```
 
 ### Pipeline Configuration
 
@@ -221,8 +182,6 @@ The pipeline enriches engagement events with content metadata and derived fields
   "engagement_pct": 1.25
 }
 ```
-
-**Field Descriptions:**
 
 ### Stateful Processing
 
