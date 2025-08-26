@@ -95,7 +95,7 @@ def main():
     
     # Get Pub/Sub emulator host
     host = os.environ.get("PUBSUB_EMULATOR_HOST", "localhost:8085")
-    print(f"📡 Using Pub/Sub emulator: {host}")
+    print(f"Using Pub/Sub emulator: {host}")
     
     # Wait for emulator to be ready
     if not wait_for_pubsub_ready(host):
