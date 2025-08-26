@@ -1,7 +1,7 @@
 # Customer Engagement Pipeline
 
 A real-time Change Data Capture (CDC) streaming pipeline that enriches engagement events with content metadata using PostgreSQL, Debezium Server, Google Cloud Pub/Sub Emulator, Apache Beam, BigQuery, and third-party API integration.
-The pipeline is meant to run locally utlziing Docker and Python. However, an alternative on how the same pipeline can be implemented fully on Google Cloud is provided for reference, please see [Google Cloud Architecture](#google-cloud-architecture).
+The pipeline is meant to run locally utilizing Docker and Python. However, an alternative on how the same pipeline can be implemented fully on Google Cloud is provided for reference, please see [Google Cloud Architecture](#google-cloud-architecture).
 
 ## Table of Contents
 
@@ -9,12 +9,14 @@ The pipeline is meant to run locally utlziing Docker and Python. However, an alt
   - [Components](#components)
 - [Quick Start](#quick-start)
   - [Prerequisites](#prerequisites)
-  - [1. Setup Environment and Start Infrastructure](#1-setup-environment-and-start-infrastructure)
+  - [1. Setup Environment](#1-setup-environment)
   - [2. Generate Test Data](#2-generate-test-data)
   - [3. Monitor the Pipeline](#3-monitor-the-pipeline)
 - [Project Structure](#project-structure)
 - [Configuration](#configuration)
   - [Environment Variables (environment.env)](#environment-variables-environmentenv)
+  - [CDC Topics & Subscriptions](#cdc-topics--subscriptions)
+  - [BigQuery Integration](#bigquery-integration)
   - [Pipeline Configuration](#pipeline-configuration)
 - [Pipeline Features](#pipeline-features)
   - [Real-time Event Enrichment](#real-time-event-enrichment)
@@ -35,9 +37,6 @@ The pipeline is meant to run locally utlziing Docker and Python. However, an alt
 - [Performance](#performance)
   - [Metrics](#metrics)
   - [Scaling Considerations](#scaling-considerations)
-- [CDC Topics & Subscriptions](#cdc-topics--subscriptions)
-- [BigQuery Integration](#bigquery-integration)
-  - [Key Features](#key-features)
 - [Third-Party API Integration](#third-party-api-integration)
 - [Google Cloud Architecture](#google-cloud-architecture)
 
@@ -192,6 +191,41 @@ customer-engagement-pipeline/
 
 Copy `environment.env` to `.env` and customize as needed
 
+
+### CDC Topics & Subscriptions
+
+Automatically created by the init container:
+
+| Topic | Subscription | Purpose |
+|-------|-------------|---------|
+| `pgcdc.public.content` | `cdc-content-sub` | Content metadata changes |
+| `pgcdc.public.engagement_events` | `cdc-engagement_events-sub` | User engagement events |
+
+
+### BigQuery Integration
+
+The pipeline includes full BigQuery integration for analytics and long-term storage. See [`bigquery/README.md`](./bigquery/README.md) for detailed setup instructions, schema information, and sample queries.
+
+#### Disabling BigQuery Integration:
+
+If you want to run the pipeline without BigQuery, you can disable it by commenting out the BigQuery writer in the pipeline code:
+
+1. **Open** `pipeline/streaming_new.py`
+2. **Find** the BigQuery writer section (search for `WriteToBigQuery` or similar)
+3. **Comment out** the BigQuery write transform:
+   ```python
+       _ = (
+        emitted
+        | "WriteToBigQuery" >> beam.io.WriteToBigQuery(
+            table=table_spec,
+            schema=table_schema,
+            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+            write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
+            method=beam.io.WriteToBigQuery.Method.STREAMING_INSERTS,
+            insert_retry_strategy=beam.io.gcp.bigquery_tools.RetryStrategy.RETRY_ON_TRANSIENT_ERROR,
+        )
+    )
+   ```
 
 ### Pipeline Configuration
 
@@ -406,46 +440,9 @@ The pipeline tracks:
 - **BigQuery streaming quotas**: Monitor streaming insert limits
 - **Third-party API rate limiting**: Implement backoff and retry logic
 
-## CDC Topics & Subscriptions
-
-Automatically created by the init container:
-
-| Topic | Subscription | Purpose |
-|-------|-------------|---------|
-| `pgcdc.public.content` | `cdc-content-sub` | Content metadata changes |
-| `pgcdc.public.engagement_events` | `cdc-engagement_events-sub` | User engagement events |
 
 
-## BigQuery Integration
 
-The pipeline includes full BigQuery integration for analytics and long-term storage. See [`bigquery/README.md`](./bigquery/README.md) for detailed setup instructions, schema information, and sample queries.
-
-### Key Features:
-- **Streaming inserts** for real-time data availability
-- **Partitioned tables** by event timestamp for cost optimization
-- **Clustered columns** for query performance
-- **Schema validation** using JSON schema definitions
-
-### Disabling BigQuery Integration:
-
-If you want to run the pipeline without BigQuery, you can disable it by commenting out the BigQuery writer in the pipeline code:
-
-1. **Open** `pipeline/streaming_new.py`
-2. **Find** the BigQuery writer section (search for `WriteToBigQuery` or similar)
-3. **Comment out** the BigQuery write transform:
-   ```python
-       _ = (
-        emitted
-        | "WriteToBigQuery" >> beam.io.WriteToBigQuery(
-            table=table_spec,
-            schema=table_schema,
-            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-            write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
-            method=beam.io.WriteToBigQuery.Method.STREAMING_INSERTS,
-            insert_retry_strategy=beam.io.gcp.bigquery_tools.RetryStrategy.RETRY_ON_TRANSIENT_ERROR,
-        )
-    )
-   ```
 
 
 ## Third-Party API Integration
