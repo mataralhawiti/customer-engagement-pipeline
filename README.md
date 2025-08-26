@@ -92,7 +92,9 @@ The pipeline is meant to run locally utlziing Docker and Python. However, an alt
     gcloud auth list
     ```
 
+
 > **💡 Note:** If you prefer to run the pipeline without BigQuery integration, you can comment out the BigQuery writer section in the pipeline code. See the [BigQuery Integration](#bigquery-integration) section for details on disabling this component.
+
 
 ### 1. Setup Environment and Start Infrastructure
 
