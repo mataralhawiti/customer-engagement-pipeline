@@ -1,8 +1,6 @@
 -- BigQuery table creation script for enriched engagement events
--- BigQuery Project: Replace {BIGQUERY_PROJECT} with your BigQuery project ID
--- Example: sed 's/{BIGQUERY_PROJECT}/my-bigquery-project/g' create_table.sql | bq query --use_legacy_sql=false
 
-CREATE TABLE `{BIGQUERY_PROJECT}.engagement_analytics.enriched_events` (
+CREATE TABLE `engagement_analytics.enriched_events` (
   id INTEGER NOT NULL OPTIONS(description="Unique identifier for the engagement event"),
   content_id STRING NOT NULL OPTIONS(description="UUID of the content being engaged with"),
   user_id STRING NOT NULL OPTIONS(description="UUID of the user performing the engagement"),
