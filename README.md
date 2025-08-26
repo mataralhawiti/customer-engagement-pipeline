@@ -3,6 +3,13 @@
 A real-time Change Data Capture (CDC) streaming pipeline that enriches engagement events with content metadata using PostgreSQL, Debezium Server, Google Cloud Pub/Sub Emulator, Apache Beam, BigQuery, and third-party API integration.
 The pipeline is meant to run locally utilizing Docker and Python. However, an alternative on how the same pipeline can be implemented fully on Google Cloud is provided for reference, please see [Google Cloud Architecture](#google-cloud-architecture).
 
+The pipeline performance is limited due to the fact it uses Apache Beam direct runner (Local runner).
+
+For production scale, the pipeline should be run using Google Cloud Dataflow runner that provides better performance, scalability, reliable state management, and more cost effectiveness.
+
+Other runners such as Apache Flink runner or Apache Spark runner can be used with little modifications and configrations.
+
+
 ## Table of Contents
 
 - [Architecture](#architecture)
@@ -122,6 +129,7 @@ This will automatically:
 ### 2. Generate Test Data
 
 ```bash
+# On you local machine
 # Install Python dependencies for data generator
 pip install faker psycopg2-binary
 
@@ -211,7 +219,7 @@ The pipeline includes full BigQuery integration for analytics and long-term stor
 If you want to run the pipeline without BigQuery, you can disable it by commenting out the BigQuery writer in the pipeline code:
 
 1. **Open** `pipeline/streaming_new.py`
-2. **Find** the BigQuery writer section (search for `WriteToBigQuery` or similar)
+2. **Find** the BigQuery writer section (search for `WriteToBigQuery`)
 3. **Comment out** the BigQuery write transform:
    ```python
        _ = (
@@ -453,17 +461,7 @@ The pipeline tracks:
 - **BigQuery streaming insert success/failures**
 - **Third-party API response times and error rates**
 
-### Scaling Considerations
-
-- **Horizontal scaling**: Multiple pipeline instances with Dataflow
-- **Vertical scaling**: Increase container resources
-- **Redis clustering**: For high-throughput scenarios
-- **Pub/Sub partitioning**: For parallel processing
-- **BigQuery streaming quotas**: Monitor streaming insert limits
-- **Third-party API rate limiting**: Implement backoff and retry logic
-
-
 
 ## Google Cloud Architecture
 
-![Google Cloud Pipeline Architecture](./Events.png)
+![Google Cloud Pipeline Architecture](./GCP.png)
