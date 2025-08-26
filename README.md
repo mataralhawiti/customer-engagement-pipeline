@@ -66,7 +66,7 @@ The pipeline is meant to run locally utlziing Docker and Python. However, an alt
 - **Google Cloud Project with BigQuery enabled** (for full pipeline functionality)
   - The pipeline writes enriched events to BigQuery for analytics
   - BigQuery table must be created beforehand (see [BigQuery Integration](#bigquery-integration))
-  - Update BigQuery project (BIGQUERY_PROJECT) variables in `.env` file
+  - Update BigQuery project (BIGQUERY_PROJECT) variables in `.env` file in **Setup Environment** below
   - **Google Cloud CLI (gcloud) authentication required**
 
     #### Google Cloud Setup Instructions:
@@ -96,7 +96,7 @@ The pipeline is meant to run locally utlziing Docker and Python. However, an alt
 > **💡 Note:** If you prefer to run the pipeline without BigQuery integration, you can comment out the BigQuery writer section in the pipeline code. See the [BigQuery Integration](#bigquery-integration) section for details on disabling this component.
 
 
-### 1. Setup Environment and Start Infrastructure
+### 1. Setup Environment
 
 ```bash
 # Clone and navigate to project
