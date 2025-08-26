@@ -75,7 +75,7 @@ cd customer-engagement-pipeline
 cp environment.env .env
 
 # Start all services
-docker compose up --build
+docker compose up --build -d
 ```
 
 This will automatically:
@@ -94,8 +94,8 @@ This will automatically:
 # Install Python dependencies for data generator
 pip install faker psycopg2-binary
 
-# Generate sample data
-python3 data_generator.py --content 10 --engagement 100 --duration 60
+# Generate sample data - ex: 10 contnet and 200 engagement per minute for 10 minutes.
+python3 data_generator.py --content 10 --engagement 200 --duration 10
 ```
 
 ### 3. Monitor the Pipeline
