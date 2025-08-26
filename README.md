@@ -129,7 +129,7 @@ This will automatically:
 ### 2. Generate Test Data
 
 ```bash
-# On you local machine
+# On your local machine
 # Install Python dependencies for data generator
 pip install faker psycopg2-binary
 
