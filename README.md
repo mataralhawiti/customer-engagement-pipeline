@@ -23,6 +23,7 @@ The pipeline is meant to run locally utilizing Docker and Python. However, an al
   - [Stateful Processing](#stateful-processing)
   - [Windowing Strategy](#windowing-strategy)
   - [Multiple Output Destinations (Multi-sink fan-out)](#multiple-output-destinations-multi-sink-fan-out)
+- [Data Insights](#data-insights)
 - [Data Generation Options](#data-generation-options)
 - [Monitoring & Debugging](#monitoring--debugging)
   - [View Pipeline Logs](#view-pipeline-logs)
@@ -305,6 +306,16 @@ The pipeline enriches engagement events with content metadata and derived fields
 - **BigQuery**: Data warehouse for analytics with streaming inserts
 - **Third-Party API**: HTTP integration for external systems via FastAPI
 
+## Data Insights
+
+The pipeline provides comprehensive analytics capabilities through BigQuery integration. Explore pre-built analytical queries and insights to understand user engagement patterns, content performance, and system metrics.
+
+See [`bigquery/insights.md`](./bigquery/insights.md) for detailed analytical queries including:
+- Engagement correlation analysis by content type and device
+- Percentile-based performance metrics
+- Device-specific engagement patterns
+- Content performance analytics
+- User behavior insights
 
 ## Data Generation Options
 
