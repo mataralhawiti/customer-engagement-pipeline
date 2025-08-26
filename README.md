@@ -2,6 +2,44 @@
 
 A real-time Change Data Capture (CDC) streaming pipeline that enriches engagement events with content metadata using PostgreSQL, Debezium Server, Google Cloud Pub/Sub Emulator, Apache Beam, BigQuery, and third-party API integration.
 
+## Table of Contents
+
+- [Architecture](#architecture)
+  - [Components](#components)
+- [Quick Start](#quick-start)
+  - [Prerequisites](#prerequisites)
+  - [1. Setup Environment and Start Infrastructure](#1-setup-environment-and-start-infrastructure)
+  - [2. Generate Test Data](#2-generate-test-data)
+  - [3. Monitor the Pipeline](#3-monitor-the-pipeline)
+- [Project Structure](#project-structure)
+- [Configuration](#configuration)
+  - [Environment Variables (environment.env)](#environment-variables-environmentenv)
+  - [Pipeline Configuration](#pipeline-configuration)
+- [Pipeline Features](#pipeline-features)
+  - [Real-time Event Enrichment](#real-time-event-enrichment)
+  - [Stateful Processing](#stateful-processing)
+  - [Windowing Strategy](#windowing-strategy)
+  - [Multiple Output Destinations](#multiple-output-destinations)
+- [Monitoring & Debugging](#monitoring--debugging)
+  - [View Pipeline Logs](#view-pipeline-logs)
+  - [Redis Inspection](#redis-inspection)
+  - [Database Inspection](#database-inspection)
+  - [BigQuery Inspection](#bigquery-inspection)
+  - [Third-Party API Testing](#third-party-api-testing)
+- [Development](#development)
+  - [Data Generation Options](#data-generation-options)
+- [Troubleshooting](#troubleshooting)
+  - [Common Issues](#common-issues)
+  - [Reset Everything](#reset-everything)
+- [Performance](#performance)
+  - [Metrics](#metrics)
+  - [Scaling Considerations](#scaling-considerations)
+- [CDC Topics & Subscriptions](#cdc-topics--subscriptions)
+- [BigQuery Integration](#bigquery-integration)
+  - [Key Features](#key-features)
+- [Third-Party API Integration](#third-party-api-integration)
+- [Google Cloud Architecture](#google-cloud-architecture)
+
 ## Architecture
 
 ![CDC Pipeline Architecture](./architecture.png)
