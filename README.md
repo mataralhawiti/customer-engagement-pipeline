@@ -41,6 +41,11 @@ Other runners such as Apache Flink runner or Apache Spark runner can be used wit
 - [Troubleshooting](#troubleshooting)
   - [Common Issues](#common-issues)
   - [Reset Everything](#reset-everything)
+- [Missing Features](#missing-features)
+  - [Pipeline Limitations](#pipeline-limitations)
+  - [Scalability & Production Features](#scalability--production-features)
+  - [Analytics & Observability](#analytics--observability)
+  - [Integration & Extensibility](#integration--extensibility)
 - [Third-Party API Integration](#third-party-api-integration)
 - [Performance](#performance)
   - [Metrics](#metrics)
@@ -439,16 +444,6 @@ docker compose up --build
 ```
 
 
-## Third-Party API Integration
-
-The pipeline includes a FastAPI-based simulation service that demonstrates how to integrate with external systems. The service:
-
-- **Receives enriched events** via HTTP POST
-- **Logs all interactions** for debugging and monitoring
-- **Provides health checks** and basic statistics
-- **Supports batch processing** for efficient data transfer
-
-
 ## Performance
 
 ### Metrics
@@ -460,6 +455,31 @@ The pipeline tracks:
 - **Content cache size**
 - **BigQuery streaming insert success/failures**
 - **Third-party API response times and error rates**
+
+
+
+## Missing Features
+
+This pipeline is designed for local development and demonstration. Several features are missing for production deployment:
+
+### Pipeline Limitations
+
+- **Error Handling**: Limited retry mechanisms and **dead letter queues** for failed events
+- **Schema Evolution**: No automatic handling of database schema changes or data migration
+- **Data Validation**: Minimal input validation and data quality checks
+- **Authentication**: No security layer for API endpoints or data access control
+- **Configuration Management**: Basic environment variable configuration without external config stores
+
+### Scalability & Production Features
+
+- **State Management**: Local state storage not suitable for distributed processing
+- **Checkpointing**: Basic checkpointing without distributed state recovery
+- **Load Balancing**: Single instance processing without horizontal scaling
+- **Resource Management**: No auto-scaling capabilities or resource optimization
+- **Fault Tolerance**: Limited failure recovery and circuit breaker patterns
+
+
+For production use, consider migrating to Google Cloud Dataflow or other managed streaming platforms that address these limitations with enterprise-grade features.
 
 
 ## Google Cloud Architecture
