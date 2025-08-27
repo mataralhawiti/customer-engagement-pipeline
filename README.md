@@ -41,15 +41,11 @@ Other runners such as Apache Flink runner or Apache Spark runner can be used wit
 - [Troubleshooting](#troubleshooting)
   - [Common Issues](#common-issues)
   - [Reset Everything](#reset-everything)
+- [Performance](#performance)
+  - [Metrics](#metrics)
 - [Missing Features](#missing-features)
   - [Pipeline Limitations](#pipeline-limitations)
   - [Scalability & Production Features](#scalability--production-features)
-  - [Analytics & Observability](#analytics--observability)
-  - [Integration & Extensibility](#integration--extensibility)
-- [Third-Party API Integration](#third-party-api-integration)
-- [Performance](#performance)
-  - [Metrics](#metrics)
-  - [Scaling Considerations](#scaling-considerations)
 - [Google Cloud Architecture](#google-cloud-architecture)
 
 ## Architecture
