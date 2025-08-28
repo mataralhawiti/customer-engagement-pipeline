@@ -43,6 +43,8 @@ Other runners such as Apache Flink runner or Apache Spark runner can be used wit
   - [Reset Everything](#reset-everything)
 - [Performance](#performance)
   - [Metrics](#metrics)
+- [Docker Helpers](#docker-helpers)
+  - [Build Specific Services](#build-specific-services)
 - [Missing Features](#missing-features)
   - [Pipeline Limitations](#pipeline-limitations)
   - [Scalability & Production Features](#scalability--production-features)
@@ -116,6 +118,8 @@ cp environment.env .env
 # Start all services
 docker compose up --build -d
 ```
+
+> **Tip:** For faster development, you can build only specific services instead of rebuilding everything. See [Docker Helpers](#docker-helpers) for selective build commands.
 
 This will automatically:
 - Start PostgreSQL with CDC enabled
@@ -452,7 +456,19 @@ The pipeline tracks:
 - **BigQuery streaming insert success/failures**
 - **Third-party API response times and error rates**
 
+## Docker Helpers
 
+### Build Specific Services
+
+```bash
+# Build only specific services
+docker compose build pubsub-init
+docker compose build third-party-api
+docker compose build beam-pipeline
+
+# Build multiple specific services
+docker compose build pubsub-init beam-pipeline
+```
 
 ## Missing Features
 
